@@ -1,8 +1,10 @@
 const fs = require('fs-extra')
 const _ = require('lodash');
+const chalk = require('chalk');
 const {resolve} = require('path');
-const {fileDisplay} = require('./util');
+const {fileDisplay,strToPagesJson,removeIllegalSign} = require('./util');
 const rootPath = process.cwd(); //当前用户项目根目录
+const pagesJsonPath=resolve(rootPath,'./pages.json');       //需要写入的pages.json 目录
 const cacheJsonPath=resolve(__dirname,'../cache.config.json');      //缓存文件路径
 
 /**
@@ -18,7 +20,11 @@ const cacheJsonPath=resolve(__dirname,'../cache.config.json');      //缓存文�
             fileList= _.intersection(fileList,includes);
         }
         for(let i=0;i<fileList.length;i++){
-            codeStr+=`\r\n!${await fs.readFile(fileList[i], 'utf8')}`
+            let str=`!${await fs.readFile(fileList[i], 'utf8')}`;
+            str=str.replace(/\w+(?=\:)/g,function(it){
+                return `"${it}"`
+            })
+            codeStr+=str;
         }
         resolve(codeStr);
     })
@@ -29,16 +35,34 @@ const cacheJsonPath=resolve(__dirname,'../cache.config.json');      //缓存文�
  * @param {Object} rule 需要遍历的正则规则集合
  */
 function strGetValue(codeStr,rule){
-    const valueList=[];
+    let valueStr=``;
     for(let [key,reg] of Object.entries(rule)){
         codeStr=codeStr.replace(eval(reg),function(value){
-            valueList.push({
-                [key]:value,
-            })
+            value=removeIllegalSign(value);     //去除非法字符结尾
+            valueStr+=`"${key}":${value},`
+            console.log(value)
             return ''
         })
     }
-    return valueList;
+    return valueStr.replace(/\,$/,'');
+}
+/**
+ * 获取到开发者目录下的pages.json内容
+ */
+function getPagesStr(){
+    return new Promise(async (resolve,reject)=>{
+        try {
+            let pagesStr= await fs.readFile(pagesJsonPath,'utf8');
+            if(pagesStr.trim()==''){
+                pagesStr='{}';  
+            }     
+            resolve(pagesStr);
+        } catch (error) {
+            console.log(error)
+            console.log(chalk.red.bold(`配置文件 pages.json 读取失败，请检查文件内容是否正确或者文件是否存在`));
+            reject();
+        }
+    })
 }
 
 (async ()=>{
@@ -49,6 +73,12 @@ function strGetValue(codeStr,rule){
             watch:[watchDisFile]
         } 
     }=cacheJson;
+   const pagesStr=await getPagesStr();
    const codeStr=await getDisFileCont(includes,watchDisFile);
-   strGetValue(codeStr,cacheJson.rule);
+   const writePagesStr=strGetValue(codeStr,cacheJson.rule);
+   await strToPagesJson({
+       path:pagesJsonPath,
+       pagesStr,
+       writeStr:writePagesStr
+   });
 })()

@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs-extra');
+const { resolve } = require('path');
 
 /**
  * 文件遍历方法
@@ -46,7 +47,36 @@ function fileDisplay(filePath) {
         });
     })
 }
+/**
+ * 将一个字符串格式化为正在的json 去除非法结尾字符
+ * @param {String} str  需要去除非法结尾的字符串
+ */
+function removeIllegalSign(str){
+    str= str.replace(/\,[\s]*(?=\})/g,sign=>sign.replace(/\,/g,''));
+    return str.replace(/(?<=[\}\]])[\s]*\,[\s]*(?=[\}\]])/,sign=>sign.replace(/\,/g,''))
+}
+
+function diffStrMergeStr(pagesStr,writeStr){
+    return new Promise(async resolve=>{
+        resolve(writeStr);
+    })
+}
+
+function strToPagesJson({path,pagesStr,writeStr}){
+    return new Promise(async resolve=>{
+        try {
+            // const writeStr= await diffStrMergeStr(pagesStr,writeStr);
+            // console.log(writeStr)
+            await fs.outputFile(path,`{${writeStr}}`);
+            resolve();
+        } catch (error) {
+            
+        }
+    })
+}
 
 module.exports = {
-    fileDisplay
+    fileDisplay,
+    strToPagesJson,
+    removeIllegalSign
 }
