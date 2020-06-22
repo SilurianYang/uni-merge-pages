@@ -7,11 +7,11 @@ const TABBAR = {
 		"pagePath": "pages/component/index",
 		"iconPath": "static/image/icon_component.png",
 		"selectedIconPath": "static/image/icon_component_HL.png",
-		"text": "组件"
+		"text": "组件",
 	}, {
 		"pagePath": "pages/API/index",
 		"iconPath": "static/image/icon_API.png",
 		"selectedIconPath": "static/image/icon_API_HL.png",
-		"text": "接口"
-	}]
+		"text": "接口",
+	},],
 };
