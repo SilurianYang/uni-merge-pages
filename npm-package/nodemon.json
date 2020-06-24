@@ -1,0 +1,1 @@
+{"restartable":"rs","ignore":[".git","node_modules/*"],"verbose":false,"execMap":{"js":"node --harmony"},"watch":["D:\\MY_GIT_INFO\\uni-merge-pages\\example\\example-merge-pages\\config\\*"],"env":{"NODE_ENV":"production"},"ext":"js"}
