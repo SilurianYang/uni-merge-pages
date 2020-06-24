@@ -1,16 +1,13 @@
 const {resolve}=require('path');
 
 module.exports = {
-	includes: [
+	includes:[
 		resolve(__dirname, './config/pages.js'),
-		resolve(__dirname, './config/tabbar.js')
 	],
-	rule: {
-	},
+	rule: {},
 	nodemon:{
 		watch:[
 			resolve(__dirname, './config/*'),
 		],
-		verbose: true,
 	}
 }
