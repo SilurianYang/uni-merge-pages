@@ -1,6 +1,10 @@
 const path = require('path');
 const fs = require('fs-extra');
-const { resolve } = require('path');
+const progressBar = require('./progress-bar.js');
+
+const progress = new progressBar('正在构建', 0);
+const progressTotal = 100;
+let [speed, clearStop] = [0, null];
 
 /**
  * 文件遍历方法
@@ -22,7 +26,7 @@ function fileDisplay(filePath) {
                     //获取当前文件的绝对路径
                     const filedir = path.join(filePath, files[i]);
                     //根据文件路径获取文件信息，返回一个fs.Stats对象
-                    const fileArray= await new Promise((next, reject1) => {
+                    const fileArray = await new Promise((next, reject1) => {
                         fs.stat(filedir, async function (eror, stats) {
                             if (eror) {
                                 console.warn('获取文件stats失败');
@@ -40,7 +44,7 @@ function fileDisplay(filePath) {
                             }
                         })
                     })
-                    Filelist=Filelist.concat(fileArray);
+                    Filelist = Filelist.concat(fileArray);
                 }
                 resolve(Filelist);
             }
@@ -51,26 +55,52 @@ function fileDisplay(filePath) {
  * 将一个字符串格式化为正在的json 去除非法结尾字符
  * @param {String} str  需要去除非法结尾的字符串
  */
-function removeIllegalSign(str){
-    str= str.replace(/\,[\s]*(?=\})/g,sign=>sign.replace(/\,/g,''));
-    return str.replace(/(?<=[\}\]])[\s]*\,[\s]*(?=[\}\]])/,sign=>sign.replace(/\,/g,''))
+function removeIllegalSign(str) {
+    str = str.replace(/\,[\s]*(?=\})/g, sign => sign.replace(/\,/g, ''));
+    return str.replace(/(?<=[\}\]])[\s]*\,[\s]*(?=[\}\]])/, sign => sign.replace(/\,/g, ''))
 }
 
-function diffStrMergeStr(pagesStr,writeStr){
-    return new Promise(async resolve=>{
-        resolve(writeStr);
-    })
+function updateProgress(reset=false) {
+    if(reset){
+        speed=0;
+        progress.description='正在构建'
+    }
+    if (speed <= progressTotal) {
+        progress.render({
+            completed: speed,
+            total: progressTotal
+        });
+        speed+=parseInt(Math.random()*50);
+        clearTimeout(clearStop)
+        clearStop = setTimeout(function () {
+            updateProgress();
+        }, 200)
+    }else{
+        stopProgress();
+    }
 }
 
-function strToPagesJson({path,pagesStr,writeStr}){
-    return new Promise(async resolve=>{
+function stopProgress(){
+    progress.description='构建完成'
+    speed=0;
+    progress.render({
+        completed: progressTotal,
+        total: progressTotal
+    });
+    clearTimeout(clearStop)
+}
+
+function strToPagesJson({
+    path,
+    pagesStr,
+    writeStr
+}) {
+    return new Promise(async (resolve, reject) => {
         try {
-            // const writeStr= await diffStrMergeStr(pagesStr,writeStr);
-            // console.log(writeStr)
-            await fs.outputFile(path,`{${writeStr}}`);
+            await fs.outputFile(path, `{${writeStr}}`);
             resolve();
         } catch (error) {
-            
+            reject(error);
         }
     })
 }
@@ -78,5 +108,7 @@ function strToPagesJson({path,pagesStr,writeStr}){
 module.exports = {
     fileDisplay,
     strToPagesJson,
-    removeIllegalSign
+    removeIllegalSign,
+    updateProgress,
+    stopProgress
 }

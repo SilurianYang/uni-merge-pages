@@ -1,12 +1,10 @@
 #! /usr/bin/env node
 
-const {
-    resolve
-} = require('path');
+const {resolve} = require('path');
 const {
     argv: {
         config: configPath,
-        watch: watchPath
+        watch: watchPath,
     }
 } = require('yargs');
 const _ = require('lodash');

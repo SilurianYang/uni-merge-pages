@@ -2,10 +2,12 @@ const fs = require('fs-extra')
 const _ = require('lodash');
 const chalk = require('chalk');
 const {resolve} = require('path');
-const {fileDisplay,strToPagesJson,removeIllegalSign} = require('./util');
+const {fileDisplay,strToPagesJson,removeIllegalSign,updateProgress,stopProgress} = require('./util');
 const rootPath = process.cwd(); //当前用户项目根目录
 const pagesJsonPath=resolve(rootPath,'./pages.json');       //需要写入的pages.json 目录
 const cacheJsonPath=resolve(__dirname,'../cache.config.json');      //缓存文件路径
+const log = console.log;
+
 
 /**
  * 遍历制定目录并提取指定文件的内容
@@ -38,9 +40,18 @@ function strGetValue(codeStr,rule){
     let valueStr=``;
     for(let [key,reg] of Object.entries(rule)){
         codeStr=codeStr.replace(eval(reg),function(value){
-            value=removeIllegalSign(value);     //去除非法字符结尾
-            valueStr+=`"${key}":${value},`
-            console.log(value)
+            value=value.replace(/\'/g,"\"");
+            if(key === 'pagesother'){       //其他配置直接读取json 不用管条件编译
+                let otherJSON='';
+                eval(`((json=${value})=>{otherJSON=json})()`);
+                Object.entries(otherJSON).forEach(it=>{
+                    const [k,val]=it;
+                    valueStr+=`"${k}":${JSON.stringify(val)},`
+                })
+            }else{
+                value=removeIllegalSign(value);     //去除非法字符结尾
+                valueStr+=`"${key}":${value},`
+            }
             return ''
         })
     }
@@ -58,14 +69,15 @@ function getPagesStr(){
             }     
             resolve(pagesStr);
         } catch (error) {
-            console.log(error)
-            console.log(chalk.red.bold(`配置文件 pages.json 读取失败，请检查文件内容是否正确或者文件是否存在`));
+            log(chalk.red.bold(`配置文件 pages.json 读取失败，请检查文件内容是否正确或者文件是否存在`));
+            log(error)
             reject();
         }
     })
 }
 
 (async ()=>{
+    updateProgress(true);       //更新进度条
     const cacheJson= await fs.readJson(cacheJsonPath);
     const {
         includes,
@@ -76,9 +88,15 @@ function getPagesStr(){
    const pagesStr=await getPagesStr();
    const codeStr=await getDisFileCont(includes,watchDisFile);
    const writePagesStr=strGetValue(codeStr,cacheJson.rule);
-   await strToPagesJson({
-       path:pagesJsonPath,
-       pagesStr,
-       writeStr:writePagesStr
-   });
+   try {
+    await strToPagesJson({
+        path:pagesJsonPath,
+        pagesStr,
+        writeStr:writePagesStr
+    });
+   } catch (error) {
+    log(chalk.red.bold(`写入 pages.json 失败。`));
+    log(error)
+   }
+   stopProgress();
 })()
