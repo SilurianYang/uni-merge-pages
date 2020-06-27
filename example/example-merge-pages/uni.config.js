@@ -1,13 +1,17 @@
 const {resolve}=require('path');
 
 module.exports = {
-	includes:[
-		resolve(__dirname, './config/pages.js'),
-	],
-	rule: {},
+	publicPath:'pages/',
+	includes: [],
+	rule: {
+	},
+	transformHook:function(pagesStr,extractStr,next){
+		next(extractStr);
+	},
 	nodemon:{
 		watch:[
 			resolve(__dirname, './config/*'),
 		],
+		verbose: true,
 	}
 }

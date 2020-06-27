@@ -1,11 +1,13 @@
 {
-  "name": "example-merge-pages",
+  "name": "uni-mrege-pages",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:pages": "uni-merge-cli -v"
+    "dev": "uni-merge-cli"
   },
   "keywords": [],
   "author": "",

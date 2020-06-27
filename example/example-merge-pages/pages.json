@@ -1,22 +1,52 @@
 {"pages":[
-	// #ifdef APP-PLUS
-	{
-		"path": "pages/index/index33",
-		"style": {
-			"navigationBarTitleText": "uni-app"
-		}
-	},
-	{
-		"path": "pages/index/index222",
-		"style": {
-			"navigationBarTitleText": "uni-app"
-		}
-	},
+	// #ifdef APP-NVUE
+		{
+			"path":"pages/index33/index333",
+			"name":"index33"
+		},
 	// #endif
 	{
-		"path": "pages/index/index",
+		"path":"pages/index/index",
 		"style": {
-			"navigationBarTitleText": "uni-app"
+			"navigationBarTitleText": "uni-app",
+			"name": "hhyang(dasdsadasd)",
+			"array": [
+				{
+				}
+			]
 		}
+	},
+	{
+		"path":"pages/index2/index2",
+		"style": {
+			"navigationBarTitleText": "uni-app"}
 	}
-]}
+],"tabBar":{
+	"color": "#7A7E83",
+	"selectedColor": "#3cc51f",
+	"borderStyle": "black",
+	"backgroundColor": "#f00",
+	"list": [{
+		"pagePath": "pages/component/index",
+		"iconPath": "static/image/icon_component.png",
+		"selectedIconPath": "static/image/icon_component_HL.png",
+		"text": "组件"
+	}, {
+		"pagePath": "pages/API/index",
+		"iconPath": "static/image/icon_API.png",
+		"selectedIconPath": "static/image/icon_API_HL.png",
+		"text": "接口"
+	}]
+},"condition":{ 
+    "current": 0, 
+    "list": [{
+            "name": "swiper", //模式名称
+            "path": "pages/component/swiper/swiper", //启动页面，必选
+            "query": "interval=4000&autoplay=false"
+        },
+        {
+            "name": "test",
+            "path": "pages/component/switch/switch"
+        }
+    ]
+}}

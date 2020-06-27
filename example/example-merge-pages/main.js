@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import App from './App'
 
+import PAGES from 'config/pages';
+
+console.log(PAGES);
+
 Vue.config.productionTip = false
 
 App.mpType = 'app'
