@@ -61,6 +61,6 @@ let uniConfigJSON = {}; //uni.config.js内容
     for(let [key,value] of Object.entries(CONFIG.rule)){
         CONFIG.rule[key]=value.toString();
     }
-    await fs.writeJson(resolve(__dirname, '../cache.config.json'),CONFIG);  //写入到缓存文件中
+    await fs.writeJson(resolve(__dirname, '../cache.config.json'),{...CONFIG,uniConfigJsPath});  //写入到缓存文件中
     shell.exec(`nodemon ${evalJsPath} --config ${monConfigPath}`);
 })()

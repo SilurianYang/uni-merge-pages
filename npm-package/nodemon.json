@@ -1,1 +1,1 @@
-{"restartable":"rs","ignore":[".git","node_modules/*"],"verbose":false,"execMap":{"js":"node --harmony"},"watch":["D:\\MY_GIT_INFO\\uni-merge-pages\\example\\example-merge-pages\\config\\*"],"env":{"NODE_ENV":"production"},"ext":"js"}
+{"restartable":"rs","ignore":[".git","node_modules/*"],"verbose":true,"execMap":{"js":"node --harmony"},"watch":["C:\\Users\\16067\\Documents\\HBuilderProjects\\uni-mrege-pages\\config\\*"],"env":{"NODE_ENV":"production"},"ext":"js"}

@@ -51,14 +51,7 @@ function fileDisplay(filePath) {
         });
     })
 }
-/**
- * 将一个字符串格式化为正在的json 去除非法结尾字符
- * @param {String} str  需要去除非法结尾的字符串
- */
-function removeIllegalSign(str) {
-    str = str.replace(/\,[\s]*(?=\})/g, sign => sign.replace(/\,/g, ''));
-    return str.replace(/(?<=[\}\]])[\s]*\,[\s]*(?=[\}\]])/, sign => sign.replace(/\,/g, ''))
-}
+
 
 function updateProgress(reset=false) {
     if(reset){
@@ -76,7 +69,10 @@ function updateProgress(reset=false) {
             updateProgress();
         }, 200)
     }else{
-        stopProgress();
+        progress.render({
+            completed: 99,
+            total: progressTotal
+        });
     }
 }
 
@@ -92,7 +88,6 @@ function stopProgress(){
 
 function strToPagesJson({
     path,
-    pagesStr,
     writeStr
 }) {
     return new Promise(async (resolve, reject) => {
@@ -108,7 +103,6 @@ function strToPagesJson({
 module.exports = {
     fileDisplay,
     strToPagesJson,
-    removeIllegalSign,
     updateProgress,
-    stopProgress
+    stopProgress,
 }
