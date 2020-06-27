@@ -1,6 +1,6 @@
 {
   "name": "uni-merge-pages",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+
+  },
+  "dependencies": {
     "chalk": "^4.1.0",
     "fs-extra": "^9.0.1",
     "lodash": "^4.17.15",
@@ -20,6 +23,5 @@
     "shelljs": "^0.8.4",
     "single-line-log": "^1.1.2",
     "yargs": "^15.3.1"
-  },
-  "dependencies": {}
+  }
 }
