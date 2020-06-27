@@ -19,6 +19,7 @@ npm install uni-merge-pages nodemon -g
 ```
 
 ## 注意事项
+* 使用之前请把 `pages.json` 中的所有内容备份到其他文件，避免覆盖文件。`HBuilder X` 创建页面时，即使勾选 `在 pages.json 中注册` 也同样无效。插件只认模块化输出的产物。
 * 模块化js必须在结尾使用 **`;`** 这样才能通知到插件更准确的捕捉。
 * 目标捕捉内容默认是 `const` 声明，大写变量 包括：`PAGES、GLOBALSTYLE、EASYCOM、TABBAR、CONDITION、SUBPACKAGES、PRELOADRULE、PAGESOTHER`
 * 禁止在对象最后一对 `key/value` 后 使用注释，如果需要注释请移步到 `key/value` 头部上
