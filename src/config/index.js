@@ -1,4 +1,5 @@
 module.exports={
+    publicPath:'',
     includes: [],
 	rule: {
 		globalStyle: /(?<=const\s+GLOBALSTYLE\s*=\s*)\{[\s\S]*?}(?=\s*;)/,
